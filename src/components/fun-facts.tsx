@@ -24,6 +24,6 @@ export default function FunFacts ({ isSearching } : { isSearching: boolean }) {
   }, [isSearching])
 
   return (
-    <p className='max-w-[650px] h-20 text-gray-500 text-sm text-center'>¿Sabías qué...? "{facts}."</p>
+    <p className='max-w-[650px] h-20 text-gray-500 text-sm text-center text-balance'>"{facts}."</p>
   )
 }
