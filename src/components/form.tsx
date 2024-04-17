@@ -1,24 +1,15 @@
 import { useEffect, useState } from 'react'
+import { useDebounce } from 'use-debounce'
 
 // Types
 import { type Location } from '../types/types'
 
-// Utils
-import { colorPriceRange } from '../utils/utils'
-
-// Icons
-import DollarIcon from './icons/dollar-icon'
-
-// Ui
-import { World } from './ui/globe'
-
-// Data
-import { globeConfig, sampleArcs } from '../data/globe-config'
-
 // Constants
-import { ADDRESSES } from '../constants/constants'
-import FunFacts from './fun-facts'
-import { useDebounce } from 'use-debounce'
+import { ADDRESSES, API_URL } from '../constants/constants'
+
+// Components
+import PlacesList from './places-list'
+import AddressesList from './addresses-list'
 
 export default function Form() {
   const [location, setLocation] = useState("")
@@ -26,8 +17,9 @@ export default function Form() {
   const [locationsArray, setLocationsArray] = useState<Location[] | []>([])
   const [debouncedValue] = useDebounce(location, 500)
   const [randomPlaceholders, setRandomPlaceholders] = useState<string>('')
-  const [imageNumber, setImageNumber] = useState<number>()
+  const [imageNumber, setImageNumber] = useState<number>(0)
   const [places, setPlaces] = useState([])
+  const [isSelecting, setIsSelecting] = useState(false)
   const [isSearching, setIsSearching] = useState(false)
 
   useEffect(() => {
@@ -43,15 +35,17 @@ export default function Form() {
   }, [placesLength])
 
   useEffect(() => {
+    if (isSelecting) return
     searchAddress(location)
   }, [debouncedValue])
 
   const handleTypeAddress = (e: React.ChangeEvent<HTMLInputElement>) => {
     setLocation(e.target.value)
-    // searchAddress(e.target.value)
+    isSelecting && setIsSelecting(false)
   }
 
   const handleSelectAddress = (e: React.MouseEvent<HTMLButtonElement>) => {
+    setIsSelecting(true)
     setLocation(e.currentTarget.value)
     setLocationsArray([])
   }
@@ -64,7 +58,7 @@ export default function Form() {
     setLocationsArray([])
     event.preventDefault()
     try {
-      const res = await fetch("http://127.0.0.1:8000/search-places", {
+      const res = await fetch(`${API_URL}/search-places`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -123,93 +117,9 @@ export default function Form() {
             </button>
           </div>
         </div>
-        
-          {
-            locationsArray.length > 0
-              ? <div className='absolute top-11 left-0 right-0 mx-auto flex flex-col divide-y-[1px] divide-gray-300 bg-slate-100 text-black w-full px-4 rounded-lg shadow-lg z-50'>
-                    <button
-                      className='py-2 font-medium'
-                      value={location}
-                      type='button'
-                      onClick={handleSelectAddress}
-                    >
-                      {location}
-                    </button>
-                  {
-                    locationsArray.map((location: Location) => (
-                      <button
-                        className='py-2'
-                        key={location.place_id}
-                        value={location.display_name}
-                        type='button'
-                        onClick={handleSelectAddress}
-                      >
-                        {location.display_name}
-                      </button>
-                    ))
-                  }
-                </div>
-              : <div className='mt-6 text-center'>
-                  <p className='text-secondaryText text-pretty'>Recuerda que mientras más cantidad de lugares busques, más tiempo de espera...</p>
-                </div>
-          }
+        <AddressesList locationsArray={locationsArray} location={location} handleSelectAddress={handleSelectAddress} />
       </form>
-      {
-        isSearching
-          ? <section className='w-full flex flex-col gap-2 items-center sm:px-6 max-sm:h-[500px] justify-center'>
-              <div className='w-[720px] h-[580px] mx-auto max-[730px]:w-[520px] max-[730px]:h-[420px] max-sm:hidden z-10'>
-                <World data={sampleArcs} globeConfig={globeConfig} />
-              </div>
-              <span className='text-2xl text-center'>Buscando...</span>
-              <small className='text-base text-center'>(Esto puede tardar unos segundos)</small>
-              <FunFacts isSearching={isSearching} />
-            </section>
-          : <section className='mt-16 max-w-[1000px] mx-auto'>
-            {
-              places.length === 0
-                ? <div className='flex flex-col gap-4 items-center'>
-                  <img src={`/illustrations/travel-${imageNumber}.svg`} alt='travel car' className='size-[450px]' />
-                    <span className='text-2xl text-center'>¡Empieza a buscar lugares!</span>
-                  </div>
-                : <ul className='flex flex-col gap-6'>
-                    {places.map((place: any) => (
-                      <li key={place.address} className='flex max-[720px]:flex-col gap-4 bg-white rounded-lg items-center shadow-md max-[720px]:pb-6 overflow-x-hidden'>
-                        <a href={place.link} className='w-[600px] max-[720px]:w-full px-0 mx-0'>
-                          <img src={place.photo} alt={place.name} className='rounded-t-lg min-[720px]:rounded-lg w-full min-w-[280px] h-[250px] object-cover' />
-                        </a>
-                        <div className='w-full flex flex-col text-left gap-2 pr-6 max-[720px]:px-4 overflow-x-hidden'>
-                          <div className='flex gap-4 justify-between items-center'>
-                            <h2 className='text-2xl font-semibold w-[550px] text-ellipsis whitespace-nowrap overflow-x-hidden'>{place.name}</h2>
-                            {
-                              place.price_range !== '' &&
-                              <span className={`${colorPriceRange(place.price_range.length)} font-semibold`}><DollarIcon priceRangeLength={place.price_range.length} /></span>
-                            }
-                          </div>
-                          <div className='flex flex-col gap-2 min-[720px]:ms-4 mt-4 text-gray-600'>
-                            <span className='flex gap-2 items-center'>
-                              <img src="/icons/star-icon.svg" alt="star icon" className='size-4' />
-                              {place.rate}
-                            </span>
-                            <div className='flex gap-2 items-center'>
-                              <img src="/icons/location-icon.svg" alt="location icon" className='size-4' />
-                              <span className='w-[450px] text-ellipsis whitespace-nowrap overflow-x-hidden'>{place.address}</span>
-                            </div>
-                            <span className='flex gap-2 items-center'>
-                              <img src="/icons/telephone-icon.svg" alt="telephone icon" className='size-4' />
-                              {place.phone}
-                            </span>
-                            <div className='flex gap-2 items-center'>
-                              <img src="/icons/check-icon.svg" alt="check icon" className='size-4' />
-                              <span className='w-[450px] text-ellipsis whitespace-nowrap overflow-x-hidden'>{place.features}</span>
-                            </div>
-                          </div>
-                        </div>
-                      </li>
-                    ))}
-                  </ul>
-            }
-            </section>
-      }
+      <PlacesList isSearching={isSearching} imageNumber={imageNumber} places={places} />
     </>
-  );
+  )
 }

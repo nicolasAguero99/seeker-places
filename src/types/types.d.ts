@@ -14,3 +14,14 @@ export interface Location {
   display_name: string
   boundingbox:  string[]
 }
+
+export interface Place {
+  name:         string
+  address:      string
+  phone:        string
+  rate:         string
+  features:     string
+  price_range:  string
+  link:         string
+  photo:        string
+}
