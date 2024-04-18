@@ -1,6 +1,9 @@
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 
+from selenium.webdriver.chrome.options import Options
+
+
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -11,8 +14,14 @@ import re
 URL_BASE = 'https://www.google.com/maps/'
 
 def test_scraping():
-  try: driver = webdriver.Chrome()
-  except: driver = None
+  chrome_options = Options()
+  chrome_options.binary_location = "/path/to/chrome/binary"
+  chrome_options.add_argument("--headless")
+  # try: driver = webdriver.Chrome()
+  try: driver = webdriver.Chrome(options=chrome_options)
+  except Exception as e:
+    print("Error al iniciar el controlador de Chrome:", e)
+    driver = None
 
   if driver is None:
     print("Error: No se pudo cargar el driver de Chrome.")
@@ -29,8 +38,13 @@ def test_scraping():
 
 # def web_scraping(url_web: str):
 def web_scraping(location: str, places_length: int):
+  chrome_options = Options()
+  chrome_options.binary_location = "/path/to/chrome/binary"
+  chrome_options.add_argument("--headless")  # Para ejecutar en modo sin cabeza, por ejemplo
+
   print('\n--------------\n')
-  driver = webdriver.Chrome()
+  driver = webdriver.Chrome(options=chrome_options)
+  # driver = webdriver.Chrome()
   driver.set_window_size(1000, 880)
   driver.get(URL_BASE)
   wait = WebDriverWait(driver, 10)
