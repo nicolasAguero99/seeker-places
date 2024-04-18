@@ -1,7 +1,7 @@
 from fastapi import FastAPI, UploadFile, File, Request
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-from scraping import web_scraping
+from scraping import web_scraping, test_scraping
 
 app = FastAPI()
 
@@ -24,3 +24,7 @@ async def root():
 @app.post("/search-places")
 async def get_info_place(location: Location):
   return web_scraping(location.location, location.placesLength)
+
+@app.get("/test")
+async def test():
+  return test_scraping()

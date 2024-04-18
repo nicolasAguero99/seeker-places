@@ -1,9 +1,6 @@
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 
-from selenium.webdriver.chrome.service import Service
-from webdriver_manager.chrome import ChromeDriverManager
-
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -13,10 +10,27 @@ import re
 
 URL_BASE = 'https://www.google.com/maps/'
 
+def test_scraping():
+  try: driver = webdriver.Chrome()
+  except: driver = None
+
+  if driver is None:
+    print("Error: No se pudo cargar el driver de Chrome.")
+    return "Error: No se pudo cargar el driver de Chrome."
+  else:
+    try: driver.get('https://www.google.com/maps/')
+    except: return "Error: No se pudo cargar la página."
+    if "Google Maps" in driver.title:
+      print("SEEEEEEEEEEEE, Conexión exitosa: La página se cargó correctamente.")
+      return "SEEEEEEEEEEEE, Conexión exitosa: La página se cargó correctamente."
+    else:
+      print("Error: No se pudo cargar la página correctamente.")
+      return "Error: No se pudo cargar la página correctamente."
+
 # def web_scraping(url_web: str):
 def web_scraping(location: str, places_length: int):
   print('\n--------------\n')
-  driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
+  driver = webdriver.Chrome()
   driver.set_window_size(1000, 880)
   driver.get(URL_BASE)
   wait = WebDriverWait(driver, 10)
