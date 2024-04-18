@@ -43,6 +43,7 @@ def web_scraping(location: str, places_length: int):
     time.sleep(2)
     try: name = driver.find_element("css selector", '.tAiQdd h1').text
     except: name = ''
+    print('name', driver.find_element("css selector", '.tAiQdd h1').text)
     try: rate = driver.find_element("class name", 'F7nice').text.replace('\n', ' - ')
     except: rate = ''
     try: address = driver.find_element("css selector", '[data-item-id="address"]').text[1:].strip()
