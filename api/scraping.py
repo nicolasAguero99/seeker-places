@@ -15,12 +15,12 @@ URL_BASE = 'https://www.google.com/maps/'
 
 def test_scraping():
   # chrome_options = webdriver.ChromeOptions()
-  chrome_driver_path = './drivers/chromedriver.exe'
+  # chrome_driver_path = r'\drivers'
   # chrome_options.binary_location = "/path/to/chrome/binary"
   # chrome_options.add_argument("--headless")
   # chrome_options.add_argument("--lang=es")
   # try: driver = webdriver.Chrome()
-  try: driver = webdriver.Chrome(chrome_driver_path)
+  try: driver = webdriver.Chrome(r'drivers\chromedriver.exe')
   except Exception as e:
     print("Error al iniciar el controlador de Chrome:", e)
     driver = None
@@ -41,13 +41,13 @@ def test_scraping():
 # def web_scraping(url_web: str):
 def web_scraping(location: str, places_length: int):
   # chrome_options = webdriver.ChromeOptions()
-  chrome_driver_path = './drivers/chromedriver.exe'
+  # chrome_driver_path = './drivers/chromedriver.exe'
   # chrome_options.binary_location = "/path/to/chrome/binary"
   # chrome_options.add_argument("--headless")
   # chrome_options.add_argument("--lang=es")
 
   print('\n--------------\n')
-  try: driver = webdriver.Chrome(chrome_driver_path)
+  try: driver = webdriver.Chrome(r'drivers\chromedriver.exe')
   except Exception as e:
     print("Error al iniciar el controlador de Chrome:", e)
     driver = None
