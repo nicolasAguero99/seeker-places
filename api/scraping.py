@@ -19,7 +19,7 @@ def test_scraping():
   chrome_options.add_argument("--headless")
   chrome_options.add_argument("--lang=es")
   # try: driver = webdriver.Chrome()
-  try: driver = webdriver.Chrome(options=chrome_options)
+  try: driver = webdriver.Chrome()
   except Exception as e:
     print("Error al iniciar el controlador de Chrome:", e)
     driver = None
@@ -45,7 +45,7 @@ def web_scraping(location: str, places_length: int):
   chrome_options.add_argument("--lang=es")
 
   print('\n--------------\n')
-  try: driver = webdriver.Chrome(options=chrome_options)
+  try: driver = webdriver.Chrome()
   except Exception as e:
     print("Error al iniciar el controlador de Chrome:", e)
     driver = None
