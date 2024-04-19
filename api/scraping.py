@@ -21,6 +21,7 @@ def test_scraping():
   options.add_argument('--no-sandbox')
   options.add_argument("--headless")
   options.add_argument('--disable-dev-shm-usage')
+  options.add_argument('--lang=es')
 
   # chrome_options.add_argument("--headless")
   # chrome_options.add_argument("--headless")
@@ -53,6 +54,7 @@ def web_scraping(location: str, places_length: int):
   options.add_argument('--no-sandbox')
   options.add_argument("--headless")
   options.add_argument('--disable-dev-shm-usage')
+  options.add_argument('--lang=es')
 
   # chrome_options.add_argument("--headless")
   # chrome_options.add_argument("--headless")
