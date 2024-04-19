@@ -55,7 +55,7 @@ def web_scraping(location: str, places_length: int):
   options.add_argument("--headless")
   options.add_argument('--disable-dev-shm-usage')
   options.add_argument('--lang=es')
-  options.add_argument('--window-size=1000,880')
+
   # chrome_options.add_argument("--headless")
   # chrome_options.add_argument("--headless")
   # chrome_options.add_argument("--lang=es")
@@ -66,17 +66,13 @@ def web_scraping(location: str, places_length: int):
     print("Error al iniciar el controlador de Chrome:", e)
     driver = None
   # driver = webdriver.Chrome()
-  # driver.set_window_size(1000, 880)
+  driver.set_window_size(1000, 880)
   driver.get(URL_BASE)
-  wait = WebDriverWait(driver, 60)
+  wait = WebDriverWait(driver, 10)
 
   places = []
 
-  try: input_search = driver.find_element("id", 'searchboxinput')
-  except Exception as e:
-    print("INPUT BUSQEUDAA ERROR :", e)
-    input_search = None
-  # input_search = driver.find_element("id", 'searchboxinput')
+  input_search = driver.find_element("id", 'searchboxinput')
   input_search.send_keys(location)
   input_search.send_keys(Keys.ENTER)
   # time.sleep(2)
